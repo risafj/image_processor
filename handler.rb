@@ -5,10 +5,10 @@ require 'pry'
 include Magick
 
 # The AWS config data should not be necessary in the actual lambda.
-Aws.config.update({
-  region: 'ap-northeast-1',
-  credentials: Aws::Credentials.new(ENV['AWS_ACCESS_KEY_ID'], ENV['AWS_SECRET_ACCESS_KEY'])
-  })
+# Aws.config.update({
+#   region: 'ap-northeast-1',
+#   credentials: Aws::Credentials.new(ENV['AWS_ACCESS_KEY_ID'], ENV['AWS_SECRET_ACCESS_KEY'])
+#   })
 
 # Client is necessary for downloading. Resource is for uploading.
 s3_client = Aws::S3::Client.new
@@ -32,5 +32,5 @@ downloaded_file = s3_client.get_object(
   processed_image.write('/tmp/resized.jpg')
 
 # Fill this variable, and then call the upload method on the actual image in tmp.
-object_to_upload = s3_resource.bucket('edited-image-bucket').object("resized_#{download_file_name}")
-object_to_upload.upload_file('/tmp/resized.jpg')
+upload_file_name = s3_resource.bucket('edited-image-bucket').object("resized_#{download_file_name}")
+upload_file_name.upload_file('/tmp/resized.jpg')
