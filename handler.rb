@@ -8,14 +8,16 @@ include Magick
 #   region: 'ap-northeast-1',
 #   credentials: Aws::Credentials.new(ENV['AWS_ACCESS_KEY_ID'], ENV['AWS_SECRET_ACCESS_KEY'])
 #   })
+
 def lambda_handler(event:, context:)
   # Client is necessary for downloading. Resource is for uploading.
   s3_client = Aws::S3::Client.new
   s3_resource = Aws::S3::Resource.new
 
-  download_bucket_name = 'source-image-bois'
-  download_file_name = 'anarchy.jpg'
-
+  s3_data = event["Records"][0]["s3"]
+  download_bucket_name = s3_data["bucket"]["name"]
+  download_file_name = s3_data["object"]["key"]
+  
   # This downloads an object to the specified path, or to memory (if no path specified).
   # https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/S3/Client.html#get_object-instance_method
   downloaded_file = s3_client.get_object(
